@@ -1,0 +1,105 @@
+const URL =
+  "https://sampleswap.org/samples-ghost/DRUMS%20(SINGLE%20HITS)/Cymbals/";
+
+let AudioComponent = ({ audioFile, letter, buttonClicked }) => {
+  
+  return (
+    <div
+      className="drum-pad d-flex align-items-center justify-content-center"
+      id={letter + "_div"} onClick = {buttonClicked.bind(this,letter,audioFile)} 
+    >
+      {letter}
+      <audio id={letter} className="clip" src={audioFile} type="audio/mpeg" />
+    </div>
+  );
+};
+
+let db = [
+  {
+    file: URL+"457[kb]backhit-crash-glissdown.aif.mp3",
+    item: "Q"
+  },
+  {
+    file: URL+"494[kb]crash-glissdown.aif.mp3",
+    item: "W"
+  },
+  {
+    file: URL+"100[kb]curiouscym1.aif.mp3",
+    item: "E"
+  },
+  {
+    file: URL+"31[kb]revflangcym.aif.mp3",
+    item: "A"
+  },
+  {
+    file: URL+"714[kb]reverse-echo-cymbal.wav.mp3",
+    item: "S"
+  },
+  {
+    file: URL+"13[kb]sillycym.aif.mp3",
+    item: "D"
+  },
+  {
+    file: URL+"82[kb]softcym.aif.mp3",
+    item: "Z"
+  },
+  {
+    file: URL+"78[kb]opencym.aif.mp3",
+    item: "X"
+  },
+  {
+    file: URL+"196[kb]big_china_cym.aif.mp3",
+    item: "C"
+  }
+];
+
+class DrumMachine extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state ={
+      currentLetter:"09"
+    }
+  }
+componentDidMount = ()=>{
+  let regex = /[QWEASDZXC]/;
+ document.addEventListener('keypress',(event)=>{
+   let letter = event.key.toUpperCase();
+   if(regex.test(letter)){
+     this.buttonClick(letter);
+   };
+ })
+}
+
+buttonClick = (letter) =>{
+  let currentLetter = letter;
+  this.setState({currentLetter})
+  
+  let audioFile = document.querySelector('#'+letter);
+  audioFile.play();
+}
+  render = () => {
+    return (
+      <div id="drum-machine" >
+        <h1>Welcome</h1>
+        <div className="row">
+          <div id="display" className="col-sm-6 d-flex align-items-center justify-content-center">
+            <div className="">
+            <h2>{this.state.currentLetter}</h2>
+            </div>
+          </div>
+          <div className="col-sm-6 pads ">
+            <div className="d-flex flex-wrap justify-content-center barrier">
+             {db.map((item,index) =>
+              <AudioComponent key={index} audioFile={item.file} letter={item.item} buttonClicked={this.buttonClick}/>
+            )}
+                     </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+}
+
+let container = document.querySelector("#container");
+
+ReactDOM.render(<DrumMachine />, container);
